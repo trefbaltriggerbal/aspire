@@ -44,6 +44,11 @@ pipeline via OpenTelemetry. The built‑in JSON console formatter still outputs
 structured logs locally, and each message includes its log level, timestamp and
 structured data to make log analysis easier.
 
+`AddServiceDefaults` also wires up OpenTelemetry HTTP instrumentation so the
+`traceparent` header is added automatically to requests made by `HttpClient`.
+The receiver extracts that header using the default propagator so spans from
+both services share the same TraceId in the Aspire dashboard.
+
 ## Configuring log levels
 
 Each project uses a root namespace starting with `Projects`, such as `Projects.Sender`. The logging configuration leverages this prefix so you can control the verbosity of your own code separately from framework components. An example `appsettings.json` section looks like:
@@ -74,6 +79,8 @@ This will launch the receiver and the web frontend as part of the distributed ap
 ## Next steps
 
 This repository serves as a starting point for experimenting with .NET Aspire. Feel free to extend the projects, add more services or containers and explore the orchestration capabilities provided by Aspire.
+
+For a step-by-step walkthrough see [the tutorial](TUTORIAL.md).
 
 ## Planned improvements
 

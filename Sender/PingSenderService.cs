@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -6,6 +7,7 @@ public class PingSenderService : BackgroundService
 {
     private readonly ILogger<PingSenderService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private static readonly ActivitySource ActivitySource = new("Projects.Sender");
 
     public PingSenderService(ILogger<PingSenderService> logger, IHttpClientFactory httpClientFactory)
     {
@@ -15,9 +17,10 @@ public class PingSenderService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        using var activity = ActivitySource.StartActivity("SendPing");
         var client = _httpClientFactory.CreateClient();
-        _logger.LogDebug("Sending request to receiver...");
+        _logger.LogInformation("Sending request to receiver...");
         var response = await client.GetStringAsync("http://localhost:5000/ping", stoppingToken);
-        _logger.LogDebug("Received response {Response}", response);
+        _logger.LogInformation("Received response {Response}", response);
     }
 }
