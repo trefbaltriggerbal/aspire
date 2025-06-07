@@ -2,17 +2,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
-Host.CreateDefaultBuilder(args)
-    .ConfigureLogging(logging =>
-    {
-        logging.ClearProviders();
-        logging.AddJsonConsole();
-        logging.AddOpenTelemetry();
-    })
-    .ConfigureServices(services =>
-    {
-        services.AddHttpClient();
-        services.AddHostedService<PingSenderService>();
-    })
-    .Build()
-    .Run();
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Logging.AddJsonConsole();
+builder.AddServiceDefaults();
+builder.Services.AddHttpClient();
+builder.Services.AddHostedService<PingSenderService>();
+
+using var host = builder.Build();
+host.Run();
