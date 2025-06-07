@@ -1,13 +1,13 @@
-using System.Net.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
-using var loggerFactory = LoggerFactory.Create(builder =>
-{
-    builder.AddJsonConsole();
-});
+var builder = Host.CreateApplicationBuilder(args);
 
-var logger = loggerFactory.CreateLogger<Program>();
-var client = new HttpClient();
-logger.LogInformation("Sending request to receiver...");
-var response = await client.GetStringAsync("http://localhost:5000/ping");
-logger.LogInformation("Received response {Response}", response);
+builder.Logging.AddJsonConsole();
+builder.AddServiceDefaults();
+builder.Services.AddHttpClient();
+builder.Services.AddHostedService<PingSenderService>();
+
+using var host = builder.Build();
+host.Run();

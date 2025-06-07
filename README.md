@@ -38,8 +38,10 @@ dotnet run --project Sender
 
 The sender will call `http://localhost:5000/ping` hosted by the receiver and print the response.
 
-Both console projects are configured to emit structured logs using the built-in
-JSON console formatter. Each message includes its log level, timestamp, and
+Both console projects run through the `Host` builder and use
+`AddServiceDefaults` so their logs are forwarded to Aspire's monitoring
+pipeline via OpenTelemetry. The built‑in JSON console formatter still outputs
+structured logs locally, and each message includes its log level, timestamp and
 structured data to make log analysis easier.
 
 ## Running with Aspire
