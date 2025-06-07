@@ -1,4 +1,7 @@
 using Projects.WebFrontend.Components;
+using BzBusinessLogic;
+using BzData;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,9 @@ builder.AddServiceDefaults();
 builder.Services.AddHttpClient();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource("Projects.WebFrontend"));
+builder.Services.AddDbContext<BzDbContext>(options =>
+    options.UseInMemoryDatabase("bzdb"));
+builder.Services.AddScoped<UserService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
