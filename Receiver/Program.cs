@@ -10,3 +10,4 @@ builder.Services.AddHostedService<PingReceiverService>();
 
 using var host = builder.Build();
 host.Run();
+

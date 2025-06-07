@@ -44,6 +44,7 @@ pipeline via OpenTelemetry. The built‑in JSON console formatter still outputs
 structured logs locally, and each message includes its log level, timestamp and
 structured data to make log analysis easier.
 
+
 ## Running with Aspire
 
 The `AspireHost` project references the `Aspire.Hosting` package. When executed it will start the other projects and manage them as a distributed application. Run it with:
