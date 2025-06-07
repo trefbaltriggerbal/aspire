@@ -1,0 +1,47 @@
+@page "/login"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using System.Security.Claims
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+
+<h3>Login</h3>
+
+@if (error != null)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <InputText @bind-Value="loginModel.Username" class="form-control mb-2" placeholder="Client number or email" />
+    <InputText @bind-Value="loginModel.Password" class="form-control mb-2" placeholder="Password" type="password" />
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new();
+    private string? error;
+
+    private async Task HandleLogin()
+    {
+        if (Projects.WebFrontend.Services.FakeUserDatabase.TryValidate(loginModel.Username, loginModel.Password, out var claims))
+        {
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContextAccessor.HttpContext!.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            error = "Invalid credentials";
+        }
+    }
+
+    private class LoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
