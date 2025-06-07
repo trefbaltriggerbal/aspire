@@ -8,8 +8,4 @@
     <RootNamespace>Projects.Codex.CLI</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../LinearCongruentGenerator/LinearCongruentGenerator.csproj" />
-  </ItemGroup>
-
 </Project>

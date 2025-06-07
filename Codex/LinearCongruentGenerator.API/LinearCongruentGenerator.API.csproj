@@ -6,8 +6,6 @@
     <RootNamespace>Projects.Codex.Api</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../LinearCongruentGenerator/LinearCongruentGenerator.csproj" />
     <ProjectReference Include="../LinearCongruentGenerator.CLI/LinearCongruentGenerator.CLI.csproj" />
-    <ProjectReference Include="../../AspireApp/AspireApp.ServiceDefaults/AspireApp.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>
