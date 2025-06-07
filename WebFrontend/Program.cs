@@ -13,6 +13,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => options.LoginPath = "/login");
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<Projects.WebFrontend.Services.FakeUserDatabase>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

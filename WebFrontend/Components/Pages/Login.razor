@@ -4,8 +4,11 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using System.Security.Claims
+@using Microsoft.Extensions.Logging
 @inject NavigationManager Navigation
 @inject IHttpContextAccessor HttpContextAccessor
+@inject Projects.WebFrontend.Services.FakeUserDatabase UserDatabase
+@inject ILogger<Login> Logger
 
 <h3>Login</h3>
 
@@ -26,8 +29,9 @@
 
     private async Task HandleLogin()
     {
-        if (Projects.WebFrontend.Services.FakeUserDatabase.TryValidate(loginModel.Username, loginModel.Password, out var claims))
+        if (UserDatabase.TryValidate(loginModel.Username, loginModel.Password, out var claims))
         {
+            Logger.LogInformation("User {Username} logged in", loginModel.Username);
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             await HttpContextAccessor.HttpContext!.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -36,6 +40,7 @@
         else
         {
             error = "Invalid credentials";
+            Logger.LogWarning("Failed login for {Username}", loginModel.Username);
         }
     }
 
