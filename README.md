@@ -38,6 +38,10 @@ dotnet run --project Sender
 
 The sender will call `http://localhost:5000/ping` hosted by the receiver and print the response.
 
+Both console projects are configured to emit structured logs using the built-in
+JSON console formatter. Each message includes its log level, timestamp, and
+structured data to make log analysis easier.
+
 ## Running with Aspire
 
 The `AspireHost` project references the `Aspire.Hosting` package. When executed it will start the other projects and manage them as a distributed application. Run it with:
@@ -59,3 +63,4 @@ The following GitHub issues track upcoming features for logging and observabilit
 - [#10](https://github.com/trefbaltriggerbal/aspire/issues/10) Add structured logging
 - [#11](https://github.com/trefbaltriggerbal/aspire/issues/11) Implement distributed tracing
 - [#12](https://github.com/trefbaltriggerbal/aspire/issues/12) Add metrics
+- [#16](https://github.com/trefbaltriggerbal/aspire/issues/16) Structured logs for console apps
