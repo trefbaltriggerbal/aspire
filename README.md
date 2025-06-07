@@ -44,6 +44,22 @@ pipeline via OpenTelemetry. The built‑in JSON console formatter still outputs
 structured logs locally, and each message includes its log level, timestamp and
 structured data to make log analysis easier.
 
+## Configuring log levels
+
+Each project uses a root namespace starting with `Projects`, such as `Projects.Sender`. The logging configuration leverages this prefix so you can control the verbosity of your own code separately from framework components. An example `appsettings.json` section looks like:
+
+```json
+"Logging": {
+  "LogLevel": {
+    "Default": "Information",
+    "Microsoft.AspNetCore": "Warning",
+    "Projects": "Debug"
+  }
+}
+```
+
+Because the `Projects` category matches each project's root namespace, adjusting this setting filters user-generated logs without affecting messages from ASP.NET Core or other libraries.
+
 
 ## Running with Aspire
 
