@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AspireApp\AspireApp.ServiceDefaults\AspireApp.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BzData\BzData.csproj" />
+    <ProjectReference Include="..\BzBusinessLogic\BzBusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>
