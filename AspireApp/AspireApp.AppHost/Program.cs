@@ -1,4 +1,4 @@
-﻿using Aspire.Hosting;
+using Aspire.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -8,5 +8,7 @@ builder.AddProject<Projects.Sender>("sender");
 builder.AddProject<Projects.WebFrontend>("web");
 builder.AddProject<Projects.LinearCongruentGenerator_API>("lcg")
        .WithHttpEndpoint(targetPort: 5010, name: "lcg");
+
+builder.AddProject<Projects.BlazorWebApp>("blazorwebapp");
 
 await builder.Build().RunAsync();

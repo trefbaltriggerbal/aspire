@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BlazorWebApp\BlazorWebApp.csproj" />
     <ProjectReference Include="..\..\Receiver\Receiver.csproj" />
     <ProjectReference Include="..\..\Sender\Sender.csproj" />
     <ProjectReference Include="..\..\WebFrontend\WebFrontend.csproj" />
