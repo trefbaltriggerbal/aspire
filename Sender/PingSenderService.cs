@@ -16,8 +16,8 @@ public class PingSenderService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var client = _httpClientFactory.CreateClient();
-        _logger.LogInformation("Sending request to receiver...");
+        _logger.LogDebug("Sending request to receiver...");
         var response = await client.GetStringAsync("http://localhost:5000/ping", stoppingToken);
-        _logger.LogInformation("Received response {Response}", response);
+        _logger.LogDebug("Received response {Response}", response);
     }
 }
