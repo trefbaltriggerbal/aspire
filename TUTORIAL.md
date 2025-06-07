@@ -4,10 +4,11 @@ This short guide shows how the sample projects work together and how to view obs
 
 ## Projects
 
-- **AspireApp.AppHost** – launches the Sender, Receiver and WebFrontend projects as a distributed application.
+- **AspireApp.AppHost** – launches the Sender, Receiver, WebFrontend and LCG API projects as a distributed application.
 - **Sender** – console app that sends a `GET /ping` request to Receiver.
 - **Receiver** – lightweight HTTP listener that responds with `Pong`.
-- **WebFrontend** – Blazor web app that can trigger Sender.
+- **WebFrontend** – Blazor web app that can trigger Sender and communicate with the LCG API.
+- **LCG API** – HTTP service exposing the linear congruential generator.
 
 ## Running the distributed app
 
@@ -28,6 +29,17 @@ This short guide shows how the sample projects work together and how to view obs
    ```
 
 This starts all services and shows the Aspire dashboard on [http://localhost:18888](http://localhost:18888).
+The WebFrontend includes an `LCG` page that interacts with the LCG API. A named `HttpClient` is configured as follows:
+
+```csharp
+builder.Services.AddHttpClient("lcg", (sp, client) =>
+{
+    var resolver = sp.GetRequiredService<IServiceUriResolver>();
+    client.BaseAddress = resolver.Resolve("lcg");
+});
+```
+
+Calls like `await client.GetStringAsync("/lcg/short")` work automatically inside the distributed application. The `lcg` host name only works from within the app. If you browse to the API yourself or run services individually, use the port shown in the AppHost console output.
 
 ## Observing logs and traces
 

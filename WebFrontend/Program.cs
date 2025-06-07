@@ -1,10 +1,16 @@
 using Projects.WebFrontend.Components;
+using Microsoft.Extensions.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddJsonConsole();
 builder.AddServiceDefaults();
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("lcg", (sp, client) =>
+{
+    var uriResolver = sp.GetRequiredService<IServiceUriResolver>();
+    client.BaseAddress = uriResolver.Resolve("lcg");
+});
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource("Projects.WebFrontend"));
 

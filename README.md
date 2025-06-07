@@ -69,13 +69,23 @@ Because the `Projects` category matches each project's root namespace, adjusting
 
 ## Running with Aspire
 
-The `AspireHost` project references the `Aspire.Hosting` package. When executed it will start the other projects and manage them as a distributed application. Run it with:
+The **AspireApp.AppHost** project references the `Aspire.Hosting` package. When executed it starts all other services and manages them as a distributed application. Run it with:
 
 ```bash
-dotnet run --project AspireHost
+dotnet run --project AspireApp/AspireApp.AppHost
 ```
 
-This will launch the receiver and the web frontend as part of the distributed app. The sender project can be triggered from the web frontend or run separately.
+This launches the Receiver, Sender, WebFrontend and the LCG API. Navigate to the `LCG` page in the web app to exercise the API. The WebFrontend configures a named `HttpClient` for the `lcg` service:
+
+```csharp
+builder.Services.AddHttpClient("lcg", (sp, client) =>
+{
+    var resolver = sp.GetRequiredService<IServiceUriResolver>();
+    client.BaseAddress = resolver.Resolve("lcg");
+});
+```
+
+The client then issues requests like `await client.GetStringAsync("/lcg/short")`. The `lcg` host name works only for code running inside the distributed application. When accessing the API directly from a browser or when running projects individually, use the port printed in the AppHost output instead of `http://lcg`.
 
 ## Next steps
 

@@ -45,36 +45,36 @@
 
     private async Task Short()
     {
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("lcg");
         Logger.LogInformation("Calling short");
-        message = await client.GetStringAsync("http://lcg/lcg/short");
+        message = await client.GetStringAsync("/lcg/short");
     }
 
     private async Task Fast()
     {
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("lcg");
         Logger.LogInformation("Calling fast {Steps}", fastSteps);
-        message = await client.GetStringAsync($"http://lcg/lcg/fast/{fastSteps}");
+        message = await client.GetStringAsync($"/lcg/fast/{fastSteps}");
     }
 
     private async Task Set(string param)
     {
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("lcg");
         Logger.LogInformation("Calling set {Param} {Value}", param, setValue);
-        message = await client.GetStringAsync($"http://lcg/lcg/set/{param}/{setValue}");
+        message = await client.GetStringAsync($"/lcg/set/{param}/{setValue}");
     }
 
     private async Task Get(string param)
     {
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("lcg");
         Logger.LogInformation("Calling get {Param}", param);
-        message = await client.GetStringAsync($"http://lcg/lcg/get/{param}");
+        message = await client.GetStringAsync($"/lcg/get/{param}");
     }
 
     private async Task SetSeed()
     {
-        var client = HttpClientFactory.CreateClient();
+        var client = HttpClientFactory.CreateClient("lcg");
         Logger.LogInformation("Calling seed {Value}", seedValue);
-        message = await client.GetStringAsync($"http://lcg/lcg/seed/{seedValue}");
+        message = await client.GetStringAsync($"/lcg/seed/{seedValue}");
     }
 }
