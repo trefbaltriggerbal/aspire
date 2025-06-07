@@ -11,6 +11,13 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource("Projects.Codex.Api"));
 
+// If no URL was provided via ASPNETCORE_URLS, default to http://localhost:5010
+// so the API can be reached consistently when run outside Aspire.
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+{
+    builder.WebHost.UseUrls("http://localhost:5010");
+}
+
 builder.Services.AddSingleton(new CommandHandler(1103515245, 12345, 1L << 31, 1));
 
 var app = builder.Build();
