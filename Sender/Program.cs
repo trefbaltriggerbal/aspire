@@ -1,6 +1,13 @@
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 
+using var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddJsonConsole();
+});
+
+var logger = loggerFactory.CreateLogger<Program>();
 var client = new HttpClient();
-Console.WriteLine("Sending request to receiver...");
+logger.LogInformation("Sending request to receiver...");
 var response = await client.GetStringAsync("http://localhost:5000/ping");
-Console.WriteLine($"Received response: {response}");
+logger.LogInformation("Received response {Response}", response);

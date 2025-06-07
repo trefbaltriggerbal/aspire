@@ -1,9 +1,17 @@
 using System.Net;
+using Microsoft.Extensions.Logging;
+
+using var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddJsonConsole();
+});
+
+var logger = loggerFactory.CreateLogger<Program>();
 
 var listener = new HttpListener();
 listener.Prefixes.Add("http://localhost:5000/");
 listener.Start();
-Console.WriteLine("Receiver listening on http://localhost:5000/");
+logger.LogInformation("Receiver listening on http://localhost:5000/");
 
 while (true)
 {
@@ -15,6 +23,6 @@ while (true)
         context.Response.ContentLength64 = buffer.Length;
         await context.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
         context.Response.Close();
-        Console.WriteLine("Responded with Pong");
+        logger.LogInformation("Responded with {Response}", responseString);
     }
 }
