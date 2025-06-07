@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using var loggerFactory = LoggerFactory.Create(builder =>
 {
     builder.AddJsonConsole();
+    builder.AddOpenTelemetry();
 });
 
 var logger = loggerFactory.CreateLogger<Program>();
