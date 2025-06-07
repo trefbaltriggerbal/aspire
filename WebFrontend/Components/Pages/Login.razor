@@ -24,15 +24,25 @@
     private LoginModel loginModel = new();
     private string? error;
 
+    protected override void OnInitialized()
+    {
+        if (Http.BaseAddress is null)
+        {
+            Http.BaseAddress = new Uri(Navigation.BaseUri);
+        }
+    }
+
     private async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("/api/login", loginModel);
+        var response = await Http.PostAsJsonAsync("api/login", loginModel);
         if (response.IsSuccessStatusCode)
         {
+            Logger.LogInformation("Login successful for {Username}", loginModel.Username);
             Navigation.NavigateTo("/", true);
         }
         else
         {
+            Logger.LogWarning("Login failed for {Username}", loginModel.Username);
             error = "Invalid credentials";
         }
     }
