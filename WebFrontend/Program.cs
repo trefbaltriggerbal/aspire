@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddJsonConsole();
@@ -16,6 +17,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<Projects.WebFrontend.Services.FakeUserDatabase>();
 builder.Services.AddLogging();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

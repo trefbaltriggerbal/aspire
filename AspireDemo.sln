@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDemo.AppHost", "Aspir
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDemo.ServiceDefaults", "AspireDemo.ServiceDefaults\AspireDemo.ServiceDefaults.csproj", "{3790E586-043D-8337-B74A-5144E691611D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BzData", "BzData\BzData.csproj", "{805C8803-5E5F-47E2-81FA-8D9BFDC80BFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BzBusinessLogic", "BzBusinessLogic\BzBusinessLogic.csproj", "{A25FA9FA-D15E-4CEA-8663-270970F10263}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,7 @@ Global
 		{3790E586-043D-8337-B74A-5144E691611D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3790E586-043D-8337-B74A-5144E691611D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3790E586-043D-8337-B74A-5144E691611D}.Release|Any CPU.Build.0 = Release|Any CPU
+
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
