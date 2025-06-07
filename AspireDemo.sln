@@ -13,6 +13,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireApp.AppHost", "Aspire
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireApp.ServiceDefaults", "AspireApp\AspireApp.ServiceDefaults\AspireApp.ServiceDefaults.csproj", "{CEF74E1D-AEBF-CDE1-7C5A-CCC40CBE62E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Codex", "Codex", "{FD1AE8EB-EB1C-4794-8FB9-D6EB1678245D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearCongruentGenerator", "Codex\LinearCongruentGenerator\LinearCongruentGenerator.csproj", "{992D8D10-1F27-45F4-B4D4-50AC8F99C468}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearCongruentGenerator.CLI", "Codex\LinearCongruentGenerator.CLI\LinearCongruentGenerator.CLI.csproj", "{5000669E-2031-4E7A-B47A-FC94BBC6AE3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearCongruentGenerator.API", "Codex\LinearCongruentGenerator.API\LinearCongruentGenerator.API.csproj", "{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearCongruentGenerator.Tests", "Codex\LinearCongruentGenerator.Tests\LinearCongruentGenerator.Tests.csproj", "{D8A0897A-E6EF-46CE-85A6-6B092B55F568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,11 +49,33 @@ Global
 		{CEF74E1D-AEBF-CDE1-7C5A-CCC40CBE62E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF74E1D-AEBF-CDE1-7C5A-CCC40CBE62E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF74E1D-AEBF-CDE1-7C5A-CCC40CBE62E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992D8D10-1F27-45F4-B4D4-50AC8F99C468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992D8D10-1F27-45F4-B4D4-50AC8F99C468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992D8D10-1F27-45F4-B4D4-50AC8F99C468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992D8D10-1F27-45F4-B4D4-50AC8F99C468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5000669E-2031-4E7A-B47A-FC94BBC6AE3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5000669E-2031-4E7A-B47A-FC94BBC6AE3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5000669E-2031-4E7A-B47A-FC94BBC6AE3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5000669E-2031-4E7A-B47A-FC94BBC6AE3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A0897A-E6EF-46CE-85A6-6B092B55F568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A0897A-E6EF-46CE-85A6-6B092B55F568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A0897A-E6EF-46CE-85A6-6B092B55F568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A0897A-E6EF-46CE-85A6-6B092B55F568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9E61300-3033-4CF4-AB53-A6114A82EDA8}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{992D8D10-1F27-45F4-B4D4-50AC8F99C468} = {FD1AE8EB-EB1C-4794-8FB9-D6EB1678245D}
+		{5000669E-2031-4E7A-B47A-FC94BBC6AE3A} = {FD1AE8EB-EB1C-4794-8FB9-D6EB1678245D}
+		{19A4DB02-262C-49EC-A4CA-FE6FA2465CCA} = {FD1AE8EB-EB1C-4794-8FB9-D6EB1678245D}
+		{D8A0897A-E6EF-46CE-85A6-6B092B55F568} = {FD1AE8EB-EB1C-4794-8FB9-D6EB1678245D}
 	EndGlobalSection
 EndGlobal
