@@ -16,7 +16,7 @@ public class PingReceiverService : BackgroundService
         var listener = new HttpListener();
         listener.Prefixes.Add("http://localhost:5000/");
         listener.Start();
-        _logger.LogInformation("Receiver listening on http://localhost:5000/");
+        _logger.LogDebug("Receiver listening on http://localhost:5000/");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -28,7 +28,7 @@ public class PingReceiverService : BackgroundService
                 context.Response.ContentLength64 = buffer.Length;
                 await context.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length, stoppingToken);
                 context.Response.Close();
-                _logger.LogInformation("Responded with {Response}", responseString);
+                _logger.LogDebug("Responded with {Response}", responseString);
             }
         }
     }
