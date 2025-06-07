@@ -7,6 +7,6 @@ builder.AddProject<Projects.Receiver>("receiver")
 builder.AddProject<Projects.Sender>("sender");
 builder.AddProject<Projects.WebFrontend>("web");
 builder.AddProject<Projects.LinearCongruentGenerator_API>("lcg")
-       .WithHttpEndpoint(hostPort: 5010, targetPort: 5010);
+       .WithHttpEndpoint(targetPort: 5010, name: "lcg");
 
 await builder.Build().RunAsync();
