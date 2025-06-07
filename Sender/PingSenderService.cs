@@ -20,7 +20,7 @@ public class PingSenderService : BackgroundService
         using var activity = ActivitySource.StartActivity("SendPing");
         var client = _httpClientFactory.CreateClient();
         _logger.LogInformation("Sending request to receiver...");
-        var response = await client.GetStringAsync("http://localhost:5000/ping", stoppingToken);
+        var response = await client.GetStringAsync("http://receiver/ping", stoppingToken);
         _logger.LogInformation("Received response {Response}", response);
     }
 }

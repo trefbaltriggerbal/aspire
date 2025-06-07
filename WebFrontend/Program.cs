@@ -4,6 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddJsonConsole();
 builder.AddServiceDefaults();
+builder.Services.AddHttpClient();
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource("Projects.WebFrontend"));
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

@@ -6,6 +6,7 @@ This repository contains a minimal .NET 8 sample that demonstrates how to use th
 - `Receiver` – console app that hosts a small HTTP server and responds with `Pong`.
 - `WebFrontend` – Blazor Web App that can trigger the `Sender` project.
 - `AspireHost` – console project that will host the distributed application using the `Aspire.Hosting` package.
+- `LCG API` – HTTP service exposing the linear congruential generator.
 
 ## Prerequisites
 
@@ -36,7 +37,7 @@ Then in another terminal start the sender:
 dotnet run --project Sender
 ```
 
-The sender will call `http://localhost:5000/ping` hosted by the receiver and print the response.
+The sender will call `http://receiver/ping` using service discovery to reach the receiver.
 
 Both console projects run through the `Host` builder and use
 `AddServiceDefaults` so their logs are forwarded to Aspire's monitoring
