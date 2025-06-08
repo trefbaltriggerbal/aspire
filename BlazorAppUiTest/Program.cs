@@ -1,16 +1,10 @@
-﻿using System;
+﻿using Microsoft.Playwright;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Playwright;
 
 namespace UiFlowRecorder;
 
@@ -104,7 +98,7 @@ internal sealed record StepResult(string Label, bool Success, string Md5);
 
 internal static class Config
 {
-    public static readonly Uri BaseUrl = new("https://localhost:7020");
+    public static readonly Uri BaseUrl = new("http://localhost:5228");
     public const string UploadEndpoint = "https://0x0.st";
     public const string PersistFile = "UploadMap2.json";
     public const string UserAgent = "curl/8.5.0";
