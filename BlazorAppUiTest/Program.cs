@@ -79,7 +79,6 @@ internal static class Program
         }
 
         Console.WriteLine("Druk op Enter om af te sluiten…");
-        Console.ReadLine();
     }
 
     private static string BuildMarkdown(IEnumerable<StepResult> steps, IReadOnlyDictionary<string, string> urlMap)
