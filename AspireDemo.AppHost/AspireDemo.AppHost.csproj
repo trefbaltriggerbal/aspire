@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
 
@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
-    <UserSecretsId>0d087c10-405e-4f10-9c05-8badc938b660</UserSecretsId>
+    <UserSecretsId>31341e02-5332-4a83-8252-a008adf82ab3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,9 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Receiver\Receiver.csproj" />
-    <ProjectReference Include="..\..\Sender\Sender.csproj" />
-    <ProjectReference Include="..\..\WebFrontend\WebFrontend.csproj" />
+    <ProjectReference Include="..\BlazorApp\BlazorApp.csproj" />
   </ItemGroup>
 
 </Project>
