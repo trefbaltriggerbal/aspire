@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace UiFlowRecorder;
@@ -25,7 +26,12 @@ internal static class Program
 
         try
         {
-            await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            {
+                Headless = !isWindows 
+            });
             var page = await browser.NewPageAsync();
             await page.SetViewportSizeAsync(1280, 720);
 
