@@ -1,0 +1,42 @@
+﻿[
+    {
+        "name": "Counter Test",
+        "steps": [
+            {
+                "name": "Home",
+                "type": "GotoAsync",
+                "data": "Config.BaseUrl"
+            },
+            {
+                "name": "Nav to counter",
+                "type": "ClickAsync",
+                "data": "a[href='counter']"
+            },
+            {
+                "name": "Wait counter text",
+                "type": "WaitForSelectorAsync",
+                "data": "text=Current count"
+            },
+            {
+                "name": "Click increment 1",
+                "type": "ClickAsync",
+                "data": "text=Click me"
+            },
+            {
+                "name": "Pause",
+                "type": "WaitTimeout",
+                "data": "500"
+            }
+        ]
+    },
+    {
+        "name": "Smoke Home",
+        "steps": [
+            {
+                "name": "Home",
+                "type": "GotoAsync",
+                "data": "Config.BaseUrl"
+            }
+        ]
+    }
+]

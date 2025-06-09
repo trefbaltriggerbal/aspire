@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -10,19 +11,21 @@ namespace UiFlowRecorder;
 
 internal static class Program
 {
-    private static readonly FlowStep[] Flow =
-    {
-        new("Home",            async p => await p.GotoAsync(Config.BaseUrl.ToString())),
-        new("GotoCounter",     async p => await p.ClickAsync("a[href='counter']")),
-        new("WaitCounterText", async p => await p.WaitForSelectorAsync("text=Current count")),
-        new("ClickIncrementFirst",  async p => await p.ClickAsync("text=Click me")),
-        new("ClickIncrementSecond",  async p => await p.ClickAsync("text=Click me"))
-    };
-
     public static async Task Main(string[] args)
     {
         Console.OutputEncoding = Console.InputEncoding = Encoding.UTF8;
-        var headed = Array.Exists(args, a => a is "--headed" or "-H");
+
+        // 1ste niet-optionele arg = JSON-pad, anders “flows.json”
+        var jsonPath = args.FirstOrDefault(a => !a.StartsWith("-")) ?? "flows.json";
+        var headed = args.Any(a => a is "--headed" or "-H");
+
+        // 🔄  Flows inladen
+        var flows = FlowStepBuilder.FromJsonFile(jsonPath);
+        if (flows.Count == 0)
+        {
+            Console.WriteLine($"⚠️  Geen flows gevonden in {jsonPath} – stoppen.");
+            return;
+        }
 
         var playwright = await Playwright.CreateAsync();
         try
@@ -34,26 +37,24 @@ internal static class Program
             var screenshotSvc = new ScreenshotService(page);
             var results = new List<StepResult>();
 
-            foreach (var step in Flow)
+            foreach (var flow in flows)
             {
-                Console.WriteLine($"➡️  Step: {step.Name}");
-                var ok = true;
-                try { await step.Action(page); }
-                catch (Exception ex)
+                Console.WriteLine($"🔁 Flow: {flow.Name}");
+                foreach (var step in flow.Steps)
                 {
-                    ok = false;
-                    Console.WriteLine($"   ❌  Step failed: {ex.Message}");
-                }
-                var md5 = await screenshotSvc.CaptureAsync(step.Name);
-                results.Add(new(step.Name, ok, md5));
-            }
+                    Console.WriteLine($"   ➡️  Step: {step.Name}");
+                    var ok = true;
+                    try { await step.Action(page); }
+                    catch (Exception ex)
+                    {
+                        ok = false;
+                        Console.WriteLine($"      ❌  Step failed: {ex.Message}");
+                    }
 
-            var before = await page.InnerTextAsync("p:has-text('Current count')");
-            await page.WaitForTimeoutAsync(500);
-            await page.ClickAsync("text=Click me");
-            await page.WaitForFunctionAsync($"document.querySelector('p').innerText !== '{before}'");
-            var afterMd5 = await screenshotSvc.CaptureAsync("AfterSecondClick");
-            results.Add(new("AfterSecondClick", true, afterMd5));
+                    var md5 = await screenshotSvc.CaptureAsync($"{flow.Name}_{step.Name}");
+                    results.Add(new(flow.Name, step.Name, ok, md5));
+                }
+            }
 
             var uploader = new Uploader();
             await uploader.UploadAsync(screenshotSvc.Screenshots);
@@ -63,9 +64,8 @@ internal static class Program
 
             var md = BuildMarkdown(results, uploader.HashToUrl);
             var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "FileToGiveBackToUser.md");
-            File.WriteAllText(outputPath, md);
+            File.WriteAllText(outputPath, md, Encoding.UTF8);
             Console.WriteLine($"📝 Verslag opgeslagen als {outputPath}");
-
         }
         finally
         {
@@ -82,26 +82,27 @@ internal static class Program
     {
         var sb = new StringBuilder();
         sb.AppendLine("# 🧪 UI Flow Verslag\n");
-        sb.AppendLine("Hieronder vind je de stappen en de bijhorende screenshots:\n");
-        var i = 1;
-        foreach (var s in steps)
+
+        // Groepeer per flow
+        foreach (var group in steps.GroupBy(s => s.FlowName))
         {
-            var icon = s.Success ? "✅" : "❌";
-            var url = urlMap.TryGetValue(s.Md5, out var link) ? link : "<not-uploaded>";
+            sb.AppendLine($"## 🔁 Flow: {group.Key}\n");
+            int i = 1;
+            foreach (var s in group)
+            {
+                var icon = s.Success ? "✅" : "❌";
+                var url = urlMap.TryGetValue(s.Md5, out var link) ? link : "<not-uploaded>";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"{s.FlowName}_{s.Label}.png");
+                double sizeMiB = File.Exists(filePath) ? new FileInfo(filePath).Length / 1024.0 / 1024.0 : 0;
+                var expiration = CalculateExpirationDate(sizeMiB);
 
-            // Bepaal het bijhorende .png bestand
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"{s.Label}.png");
-            double sizeMiB = File.Exists(filePath) ? new FileInfo(filePath).Length / 1024.0 / 1024.0 : 0;
-            var expiration = CalculateExpirationDate(sizeMiB);
-
-            sb.AppendLine($"## {icon} {i++}. {s.Label}\n");
-            sb.AppendLine($"![{s.Label}]({url})\n");
-            sb.AppendLine($"<sub>Bestandsgrootte: {new FileInfo(filePath).Length / 1024.0:F3} kB – Vervaldatum: {expiration}</sub>\n");
+                sb.AppendLine($"### {icon} {i++}. {s.Label}\n");
+                sb.AppendLine($"![{s.Label}]({url})\n");
+                sb.AppendLine($"<sub>Bestandsgrootte: {(sizeMiB * 1024):F0} kB – Vervaldatum: {expiration}</sub>\n");
+            }
         }
         return sb.ToString();
     }
-
-
 
     private static string CalculateExpirationDate(double fileSizeMib)
     {
@@ -112,13 +113,13 @@ internal static class Program
         var term = Math.Pow((fileSizeMib / maxSize - 1), 3);
         var retentionDays = minAge + (minAge - maxAge) * term;
         var expiration = DateTime.UtcNow.AddDays(retentionDays);
-        return expiration.ToString("dddd dd MMMM yyyy 'om' HH:mm:ss (UTC)");
+        return expiration.ToString("dddd dd MMMM yyyy 'om' HH:mm:ss (UTC)", new CultureInfo("nl-BE"));
     }
 }
 
-internal sealed record FlowStep(string Name, Func<IPage, Task> Action);
-internal sealed record ScreenshotInfo(string Label, string FilePath, string Md5);
-internal sealed record StepResult(string Label, bool Success, string Md5);
+internal sealed record StepResult(string FlowName, string Label, bool Success, string Md5);
+
+// Re-added support classes
 
 internal static class Config
 {
@@ -164,6 +165,8 @@ internal sealed class ScreenshotService
         return Convert.ToHexString(bytes).ToLowerInvariant();
     }
 }
+
+internal sealed record ScreenshotInfo(string Label, string FilePath, string Md5);
 
 internal sealed class Uploader
 {
@@ -255,5 +258,4 @@ internal static class PersistLayer
         }
         Console.WriteLine("======================================\n");
     }
-
 }
