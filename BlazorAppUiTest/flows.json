@@ -1,42 +1,14 @@
 ﻿[
-    {
-        "name": "Counter Test",
-        "steps": [
-            {
-                "name": "Home",
-                "type": "GotoAsync",
-                "data": "Config.BaseUrl"
-            },
-            {
-                "name": "Nav to counter",
-                "type": "ClickAsync",
-                "data": "a[href='counter']"
-            },
-            {
-                "name": "Wait counter text",
-                "type": "WaitForSelectorAsync",
-                "data": "text=Current count"
-            },
-            {
-                "name": "Click increment 1",
-                "type": "ClickAsync",
-                "data": "text=Click me"
-            },
-            {
-                "name": "Pause",
-                "type": "WaitTimeout",
-                "data": "500"
-            }
-        ]
-    },
-    {
-        "name": "Smoke Home",
-        "steps": [
-            {
-                "name": "Home",
-                "type": "GotoAsync",
-                "data": "Config.BaseUrl"
-            }
-        ]
-    }
+  {
+    "name": "Counter Test",
+    "steps": [
+      { "name": "Home",            "type": "GotoAsync",           "data": "Config.BaseUrl"        },
+      { "name": "URL is home",     "type": "AssertUrlIs",         "expected": "https://localhost:7020/" },
+      { "name": "Nav counter",     "type": "ClickAsync",          "data": "a[href='counter']"     },
+      { "name": "Wait tekst",      "type": "WaitForSelectorAsync","data": "text=Current count"    },
+      { "name": "Klik +1",         "type": "ClickAsync",          "data": "text=Click me"         },
+      { "name": "Check counter is niet 1", "type": "AssertTextNotEquals", "selector": "p[role='status']", "expected": "Current count: 0"},
+      { "name": "URL is counter",     "type": "AssertUrlIs",         "expected": "https://localhost:7020/counter" }
+    ]
+  }
 ]
