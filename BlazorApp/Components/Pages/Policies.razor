@@ -1,0 +1,54 @@
+@page "/policies"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Client,Administrator")]
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext Db
+
+<PageTitle>Policies</PageTitle>
+
+<h1>Policies</h1>
+
+@if (policies == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (policies.Count == 0)
+{
+    <p>No policies found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr><th>Number</th><th>Description</th><th>Start</th><th>End</th></tr>
+        </thead>
+        <tbody>
+@foreach (var p in policies)
+        {
+            <tr>
+                <td>@p.PolicyNumber</td>
+                <td>@p.Description</td>
+                <td>@p.StartDate.ToShortDateString()</td>
+                <td>@p.EndDate.ToShortDateString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Policy>? policies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+        if (user != null)
+        {
+            policies = await Db.Policies.Where(p => p.UserId == user.Id).ToListAsync();
+        }
+    }
+}

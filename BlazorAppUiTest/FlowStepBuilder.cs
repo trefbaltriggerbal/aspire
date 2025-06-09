@@ -73,9 +73,10 @@ internal static class FlowStepBuilder
             var value = step.Data ?? string.Empty;
 
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            bool isAffectedControlName = selector == "input[name='Input.Email']" || selector == "input[name='Input.UserName']";
 
-            if (isWindows && selector == "input[name='Input.Email']" && page.Url.Contains("Register")) {
-                value += ".test" + Guid.NewGuid().ToString(); //
+            if (isWindows && isAffectedControlName && page.Url.Contains("Register")) {
+                value += Guid.NewGuid().ToString(); //
             }
 
             await page.FillAsync(selector, value);

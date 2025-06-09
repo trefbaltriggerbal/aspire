@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BlazorApp.Components;
 using BlazorApp.Components.Account;
 using BlazorApp.Data;
+using System.Linq;
 
 namespace BlazorApp;
 
@@ -47,6 +48,7 @@ public class Program
         }
 
         builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = requireConfirmed)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
@@ -66,6 +68,52 @@ public class Program
             {
                 db.Database.Migrate();
             }
+
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roles = new[] { "Client", "Parent", "Administrator" };
+            foreach (var role in roles)
+            {
+                if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
+                {
+                    roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+                }
+            }
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var user = userManager.FindByNameAsync("user").GetAwaiter().GetResult();
+            if (user is null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = "user",
+                    Email = "user@example.com",
+                    EmailConfirmed = true
+                };
+                userManager.CreateAsync(user, "Abc123!").GetAwaiter().GetResult();
+            }
+
+            if (!userManager.IsInRoleAsync(user, "Client").GetAwaiter().GetResult())
+            {
+                userManager.AddToRoleAsync(user, "Client").GetAwaiter().GetResult();
+            }
+
+            bool alreadyHasPolicy = db.Policies.Any(p =>
+                p.PolicyNumber == "POL123" && p.UserId == user.Id);
+
+            if (!alreadyHasPolicy)
+            {
+                db.Policies.Add(new Policy
+                {
+                    UserId = user.Id,
+                    PolicyNumber = "POL123",
+                    Description = "Voorbeeldpolis",
+                    StartDate = DateTime.UtcNow.AddMonths(-1),
+                    EndDate = DateTime.UtcNow.AddYears(1)
+                });
+                db.SaveChanges();        // sync variant
+            }
+
         }
 
         app.MapDefaultEndpoints();
