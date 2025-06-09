@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using BlazorApp.Components;
 using BlazorApp.Components.Account;
 using BlazorApp.Data;
+using System.Linq;
 
 namespace BlazorApp;
 
@@ -47,6 +48,7 @@ public class Program
         }
 
         builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = requireConfirmed)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
@@ -65,6 +67,35 @@ public class Program
             else
             {
                 db.Database.Migrate();
+            }
+
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roles = new[] { "Client", "Parent", "Administrator" };
+            foreach (var role in roles)
+            {
+                if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
+                {
+                    roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+                }
+            }
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            if (!userManager.Users.Any())
+            {
+                var user = new ApplicationUser { UserName = "client@example.com", Email = "client@example.com", EmailConfirmed = true };
+                userManager.CreateAsync(user, "Pa$$w0rd!").GetAwaiter().GetResult();
+                userManager.AddToRoleAsync(user, "Client").GetAwaiter().GetResult();
+
+                db.Policies.Add(new Policy
+                {
+                    UserId = user.Id,
+                    PolicyNumber = "POL123",
+                    Description = "Sample policy",
+                    StartDate = DateTime.UtcNow.AddMonths(-1),
+                    EndDate = DateTime.UtcNow.AddYears(1)
+                });
+
+                db.SaveChanges();
             }
         }
 
