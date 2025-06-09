@@ -181,3 +181,18 @@ dotnet run --project BlazorAppUiTest
 
   
 
+# Q&A
+  Question (from the bot) and Answer by the user
+
+
+## Playwright
+**Q: Should Playwright setup (running playwright install --with-deps) be part of every run or is it assumed to be done already?**
+*A: I don't know, I read somewhere that it just needs to be installed once* 
+
+**Q: How long should the agent wait for Playwright downloads/installations when they can take several minutes?**
+*A: maybe 2 seconds*
+
+
+**If the Playwright test fails to produce FileToGiveBackToUser.md, should the agent retry or just report failure?**
+*A: The agent should seek out why it failed, that is his purpose, that and to write the flows.json file.*
+
