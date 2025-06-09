@@ -196,3 +196,10 @@ dotnet run --project BlazorAppUiTest
 **If the Playwright test fails to produce FileToGiveBackToUser.md, should the agent retry or just report failure?**
 *A: The agent should seek out why it failed, that is his purpose, that and to write the flows.json file.*
 
+> ⚠️ Geef **geen CLI-argumenten** door aan `BlazorAppUiTest`.  
+> Het pad naar `flows.json` is hardcoded in `Program.cs`.  
+> Gebruik enkel:
+>
+> ```bash
+> dotnet run --project BlazorAppUiTest
+> ```
