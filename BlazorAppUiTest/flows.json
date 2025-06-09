@@ -2,13 +2,13 @@
   {
     "name": "Counter Test",
     "steps": [
-      { "name": "Home",            "type": "GotoAsync",           "data": "Config.BaseUrl"        },
-      { "name": "URL is home",     "type": "AssertUrlIs",         "expected": "https://localhost:7020/" },
+      { "name": "Home",            "type": "GotoAsync",           "data": "http://localhost:5228/"        },
+      { "name": "URL is home",     "type": "AssertUrlIs",         "expected": "http://localhost:5228/" },
       { "name": "Nav counter",     "type": "ClickAsync",          "data": "a[href='counter']"     },
       { "name": "Wait tekst",      "type": "WaitForSelectorAsync","data": "text=Current count"    },
       { "name": "Klik +1",         "type": "ClickAsync",          "data": "text=Click me"         },
       { "name": "Check counter is niet 1", "type": "AssertTextNotEquals", "selector": "p[role='status']", "expected": "Current count: 0"},
-      { "name": "URL is counter",     "type": "AssertUrlIs",         "expected": "https://localhost:7020/counter" }
+      { "name": "URL is counter",     "type": "AssertUrlIs",         "expected": "http://localhost:5228/counter" }
     ]
   }
 ]
