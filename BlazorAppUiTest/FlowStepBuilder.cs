@@ -1,5 +1,6 @@
 ﻿using Microsoft.Playwright;
 using System.Text.Json;
+using static AssertUrlIsCheck;
 
 namespace UiFlowRecorder;
 
@@ -103,10 +104,25 @@ Call log:
         ,
         "AssertUrlIs" => async page =>
         {
-            var expected = step.Expected ?? throw new("Expected ontbreekt");
-            if (!page.Url.Equals(expected, StringComparison.OrdinalIgnoreCase))
-                throw new($"AssertUrlIs faalde: '{page.Url}' ≠ '{expected}'.");
+            var expected = step.Expected ?? throw new InvalidOperationException("❌ 'Expected' ontbreekt.");
+
+            // Lokale URL-delen weghalen voor een duidelijker vergelijk
+            string CleanUrl(string url) =>
+                url.Replace("https://localhost:7020", "").Replace("http://localhost:5228", "");
+
+            var actualClean = CleanUrl(page.Url);
+            var expectedClean = CleanUrl(expected);
+
+            if (!string.Equals(actualClean, expectedClean, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"❌ AssertUrlIs faalde:\n" +
+                    $"   Verwacht: '{expectedClean}'\n" +
+                    $"   Gevonden: '{actualClean}'"
+                );
+            }
         }
+
         ,
         "AssertUrlContains" => async page =>
         {
