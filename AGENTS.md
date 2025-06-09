@@ -143,3 +143,41 @@ xvfb-run dotnet test --project BlazorAppUiTest
 // Tip: Parse stdout from the app process to extract the actual port
 // Or default to: http://localhost:5228 if stable
 ```
+
+  
+
+## 🧪 Playwright Setup en Verwachtingen
+
+  
+
+1. Installeer Playwright (eenmalig):
+
+```
+dotnet tool install --global Microsoft.Playwright.CLI
+playwright install --with-deps
+```
+
+  
+
+2. Start Blazor App:
+
+```bash
+xvfb-run dotnet run --project BlazorApp > /tmp/blazor.log 2>&1 &
+
+```
+
+3. Voer de test uit:
+
+```bash
+dotnet run --project BlazorAppUiTest
+```
+
+4. Genereer automatisch `FileToGiveBackToUser.md` via de testuitvoer.
+
+
+6. Uploads worden geregistreerd in `UploadMap.json`. Deze mag gecommit worden.
+
+7. ❌ Commit nooit `FileToGiveBackToUser.md`. Geef deze gewoon te zien in de response die je op het einde gaat geven
+
+  
+
