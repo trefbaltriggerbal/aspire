@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "name": "Counter Test",
     "steps": [
@@ -45,21 +45,23 @@
       }
     ]
   },
-  {
-    "name": "Register and Login",
-    "steps": [
-      { "name": "Open register", "type": "GotoAsync", "data": "http://localhost:5228/Account/Register" },
-      { "name": "Fill email", "type": "FillAsync", "selector": "input[id='Input_Email']", "data": "quinten@example.be" },
-      { "name": "Fill password", "type": "FillAsync", "selector": "input[id='Input_Password']", "data": "Abc123!" },
-      { "name": "Fill confirm", "type": "FillAsync", "selector": "input[id='Input_ConfirmPassword']", "data": "Abc123!" },
-      { "name": "Submit register", "type": "ClickAsync", "data": "button[type='submit']" },
-      { "name": "Wait logout", "type": "WaitForSelectorAsync", "data": "text=Logout" },
-      { "name": "Logout", "type": "ClickAsync", "data": "form[action='Account/Logout'] button[type='submit']" },
-      { "name": "Open login", "type": "ClickAsync", "data": "a[href='Account/Login']" },
-      { "name": "Fill login email", "type": "FillAsync", "selector": "input[id='Input_Email']", "data": "quinten@example.be" },
-      { "name": "Fill login pass", "type": "FillAsync", "selector": "input[id='Input_Password']", "data": "Abc123!" },
-      { "name": "Submit login", "type": "ClickAsync", "data": "button[type='submit']" },
-      { "name": "Assert logged", "type": "WaitForSelectorAsync", "data": "text=Logout" }
-    ]
-  }
+ {
+  "name": "Register and Login",
+  "steps": [
+    { "name": "Open register", "type": "GotoAsync", "data": "http://localhost:5228/Account/Register" },
+    { "name": "Fill email", "type": "FillAsync", "selector": "input[name='Input.Email']", "data": "quinten@example.be" },
+    { "name": "Fill password", "type": "FillAsync", "selector": "input[name='Input.Password']", "data": "Abc123!" },
+    { "name": "Fill confirm", "type": "FillAsync", "selector": "input[name='Input.ConfirmPassword']", "data": "Abc123!" },
+    { "name": "Submit register", "type": "ClickAsync", "data": "button[type='submit']" },
+
+    { "name": "Click confirm email link", "type": "ClickAsync", "data": "text=Click here to confirm your account" },
+
+    { "name": "Open login", "type": "ClickAsync", "data": "a[href='Account/Login']" },
+    { "name": "Fill login email", "type": "FillAsync", "selector": "input[name='Input.Email']", "data": "quinten@example.be" },
+    { "name": "Fill login pass", "type": "FillAsync", "selector": "input[name='Input.Password']", "data": "Abc123!" },
+    { "name": "Submit login", "type": "ClickAsync", "data": "button[type='submit']" },
+    { "name": "Assert logged", "type": "WaitForSelectorAsync", "data": "text=Logout" }
+  ]
+}
+
 ]

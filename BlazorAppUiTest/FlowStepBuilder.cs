@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using static AssertUrlIsCheck;
 
@@ -70,6 +71,13 @@ internal static class FlowStepBuilder
         {
             var selector = step.Selector ?? throw new("Selector ontbreekt");
             var value = step.Data ?? string.Empty;
+
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+            if (isWindows && selector == "input[name='Input.Email']" && page.Url.Contains("Register")) {
+                value += ".test" + Guid.NewGuid().ToString(); //
+            }
+
             await page.FillAsync(selector, value);
         },
 
