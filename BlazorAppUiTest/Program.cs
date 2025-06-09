@@ -15,7 +15,8 @@ internal static class Program
         new("Home",            async p => await p.GotoAsync(Config.BaseUrl.ToString())),
         new("GotoCounter",     async p => await p.ClickAsync("a[href='counter']")),
         new("WaitCounterText", async p => await p.WaitForSelectorAsync("text=Current count")),
-        new("ClickIncrement",  async p => await p.ClickAsync("text=Click me"))
+        new("ClickIncrementFirst",  async p => await p.ClickAsync("text=Click me")),
+        new("ClickIncrementSecond",  async p => await p.ClickAsync("text=Click me"))
     };
 
     public static async Task Main(string[] args)
@@ -61,8 +62,10 @@ internal static class Program
             PersistLayer.PrintOverview(screenshotSvc.Screenshots, uploader.HashToUrl);
 
             var md = BuildMarkdown(results, uploader.HashToUrl);
-            File.WriteAllText("FileToGiveBackToUser.md", md);
-            Console.WriteLine("📝 Verslag opgeslagen als FileToGiveBackToUser.md");
+            var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "FileToGiveBackToUser.md");
+            File.WriteAllText(outputPath, md);
+            Console.WriteLine($"📝 Verslag opgeslagen als {outputPath}");
+
         }
         finally
         {
@@ -85,10 +88,31 @@ internal static class Program
         {
             var icon = s.Success ? "✅" : "❌";
             var url = urlMap.TryGetValue(s.Md5, out var link) ? link : "<not-uploaded>";
+
+            // Bepaal het bijhorende .png bestand
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"{s.Label}.png");
+            double sizeMiB = File.Exists(filePath) ? new FileInfo(filePath).Length / 1024.0 / 1024.0 : 0;
+            var expiration = CalculateExpirationDate(sizeMiB);
+
             sb.AppendLine($"## {icon} {i++}. {s.Label}\n");
             sb.AppendLine($"![{s.Label}]({url})\n");
+            sb.AppendLine($"<sub>Bestandsgrootte: {new FileInfo(filePath).Length / 1024.0:F3} kB – Vervaldatum: {expiration}</sub>\n");
         }
         return sb.ToString();
+    }
+
+
+
+    private static string CalculateExpirationDate(double fileSizeMib)
+    {
+        const double maxSize = 512.0;
+        const int minAge = 30;
+        const int maxAge = 365;
+
+        var term = Math.Pow((fileSizeMib / maxSize - 1), 3);
+        var retentionDays = minAge + (minAge - maxAge) * term;
+        var expiration = DateTime.UtcNow.AddDays(retentionDays);
+        return expiration.ToString("dddd dd MMMM yyyy 'om' HH:mm:ss (UTC)");
     }
 }
 
@@ -231,4 +255,5 @@ internal static class PersistLayer
         }
         Console.WriteLine("======================================\n");
     }
+
 }
