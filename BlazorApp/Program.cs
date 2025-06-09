@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BlazorApp.Components;
@@ -80,23 +80,40 @@ public class Program
             }
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            if (!userManager.Users.Any())
-            {
-                var user = new ApplicationUser { UserName = "client@example.com", Email = "client@example.com", EmailConfirmed = true };
-                userManager.CreateAsync(user, "Pa$$w0rd!").GetAwaiter().GetResult();
-                userManager.AddToRoleAsync(user, "Client").GetAwaiter().GetResult();
 
+            var user = userManager.FindByNameAsync("user").GetAwaiter().GetResult();
+            if (user is null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = "user",
+                    Email = "user@example.com",
+                    EmailConfirmed = true
+                };
+                userManager.CreateAsync(user, "Abc123!").GetAwaiter().GetResult();
+            }
+
+            if (!userManager.IsInRoleAsync(user, "Client").GetAwaiter().GetResult())
+            {
+                userManager.AddToRoleAsync(user, "Client").GetAwaiter().GetResult();
+            }
+
+            bool alreadyHasPolicy = db.Policies.Any(p =>
+                p.PolicyNumber == "POL123" && p.UserId == user.Id);
+
+            if (!alreadyHasPolicy)
+            {
                 db.Policies.Add(new Policy
                 {
                     UserId = user.Id,
                     PolicyNumber = "POL123",
-                    Description = "Sample policy",
+                    Description = "Voorbeeldpolis",
                     StartDate = DateTime.UtcNow.AddMonths(-1),
                     EndDate = DateTime.UtcNow.AddYears(1)
                 });
-
-                db.SaveChanges();
+                db.SaveChanges();        // sync variant
             }
+
         }
 
         app.MapDefaultEndpoints();
