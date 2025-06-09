@@ -156,7 +156,7 @@ internal static class Program
         var retentionDays = minAge + (minAge - maxAge) * term;
         var expiration = DateTime.UtcNow.AddDays(retentionDays);
 
-        return expiration.ToString("dddd dd MMMM yyyy 'om' HH:mm:ss (UTC)", new CultureInfo("nl-BE"));
+        return expiration.ToString("dddd dd MMMM yyyy 'om' HH:mm:ss (UTC)");
     }
 }
 
