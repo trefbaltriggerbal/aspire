@@ -66,6 +66,12 @@ internal static class FlowStepBuilder
         "ClickAsync" => async page => await page.ClickAsync(step.Data!),
         "WaitForSelectorAsync" => async page => await page.WaitForSelectorAsync(step.Data!),
         "WaitTimeout" => async page => await page.WaitForTimeoutAsync(int.Parse(step.Data!)),
+        "FillAsync" => async page =>
+        {
+            var selector = step.Selector ?? throw new("Selector ontbreekt");
+            var value = step.Data ?? string.Empty;
+            await page.FillAsync(selector, value);
+        },
 
         // ---------- ASSERTS / CHECKS ----------
         // ⬇️  Faalt de check → Exception → step wordt ❌ in het verslag
