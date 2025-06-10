@@ -15,4 +15,12 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Portail Clients</value>
   </data>
+  <data name="Home" xml:space="preserve"><value>Accueil</value></data>
+  <data name="Counter" xml:space="preserve"><value>Compteur</value></data>
+  <data name="Weather" xml:space="preserve"><value>Météo</value></data>
+  <data name="Policies" xml:space="preserve"><value>Polices</value></data>
+  <data name="Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="Logout" xml:space="preserve"><value>Se déconnecter</value></data>
+  <data name="Register" xml:space="preserve"><value>S'inscrire</value></data>
+  <data name="Login" xml:space="preserve"><value>Connexion</value></data>
 </root>

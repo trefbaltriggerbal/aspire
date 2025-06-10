@@ -67,7 +67,7 @@ public class Program
         var supportedCultures = new[] { "en", "fr", "nl" };
         builder.Services.Configure<RequestLocalizationOptions>(options =>
         {
-            options.DefaultRequestCulture = new RequestCulture("nl");
+            options.DefaultRequestCulture = new RequestCulture("en");
             options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
             options.SupportedUICultures = options.SupportedCultures;
         });
