@@ -43,7 +43,11 @@ public class Program
         {
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options
+                    .UseSqlServer(connectionString)
+                    .EnableSensitiveDataLogging(true)
+                    .EnableDetailedErrors(true)
+            );
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
@@ -112,6 +116,28 @@ public class Program
                     EndDate = DateTime.UtcNow.AddYears(1)
                 });
                 db.SaveChanges();        // sync variant
+            }
+
+            var policy = db.Policies.First(p => p.PolicyNumber == "POL123" && p.UserId == user.Id);
+            if (!db.InsuranceClaims.Any(c => c.PolicyId == policy.Id))
+            {
+                db.InsuranceClaims.AddRange([
+                    new InsuranceClaim
+                    {
+                        PolicyId = policy.Id,
+                        Description = "Waterschade keuken",
+                        IncidentDate = DateTime.UtcNow.AddDays(-10),
+                        Status = "Open"
+                    },
+                    new InsuranceClaim
+                    {
+                        PolicyId = policy.Id,
+                        Description = "Diefstal fiets",
+                        IncidentDate = DateTime.UtcNow.AddDays(-30),
+                        Status = "Closed"
+                    }
+                ]);
+                db.SaveChanges();
             }
 
         }

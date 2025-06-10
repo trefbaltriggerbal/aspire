@@ -13,6 +13,11 @@ internal static class Program
 
         // Pad naar de JSON-flowdefinitie (of “flows.json” als standaard)
         var jsonPath = args.FirstOrDefault(a => !a.StartsWith("-")) ?? "flows.json";
+        if (!File.Exists(jsonPath))
+        {
+            var alt = Path.Combine("BlazorAppUiTest", "flows.json");
+            if (File.Exists(alt)) jsonPath = alt;
+        }
 
         var flows = FlowStepBuilder.FromJsonFile(jsonPath);
         if (flows.Count == 0)
