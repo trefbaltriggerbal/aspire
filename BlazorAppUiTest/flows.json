@@ -10,6 +10,7 @@
         { "name": "Open policies", "type": "GotoAsync", "data": "http://localhost:5228/policies" },
         { "name": "Wait claim", "type": "WaitForSelectorAsync", "data": "text=Waterschade keuken" },
         { "name": "Click add claim", "type": "ClickAsync", "data": "text=Add Claim" },
+        { "name": "Wait form", "type": "WaitForSelectorAsync", "data": "input[placeholder='Description']" },
         { "name": "Fill claim desc", "type": "FillAsync", "selector": "input[placeholder='Description']", "data": "Stormschade dak" },
         { "name": "Fill claim date", "type": "FillAsync", "selector": "input[placeholder='Date']", "data": "2024-01-01" },
         { "name": "Fill claim status", "type": "FillAsync", "selector": "input[placeholder='Status']", "data": "Open" },
