@@ -1,23 +1,20 @@
 ﻿[
     {
-      "name": "Register and Login",
+      "name": "Login and Claims",
       "steps": [
-        { "name": "Open register", "type": "GotoAsync", "data": "http://localhost:5228/Account/Register" },
-        { "name": "Fill username", "type": "FillAsync", "selector": "input[name='Input.UserName']", "data": "user" },
-        { "name": "Fill email", "type": "FillAsync", "selector": "input[name='Input.Email']", "data": "user@example.be" },
-        { "name": "Fill password", "type": "FillAsync", "selector": "input[name='Input.Password']", "data": "Abc123!" },
-        { "name": "Fill confirm", "type": "FillAsync", "selector": "input[name='Input.ConfirmPassword']", "data": "Abc123!" },
-        { "name": "Submit register", "type": "ClickAsync", "data": "button[type='submit']" },
-
-        { "name": "Click confirm email link", "type": "ClickAsync", "data": "text=Click here to confirm your account" },
-
-        { "name": "Open login", "type": "ClickAsync", "data": "a[href='Account/Login']" },
+        { "name": "Open login", "type": "GotoAsync", "data": "http://localhost:5228/Account/Login" },
         { "name": "Fill login username", "type": "FillAsync", "selector": "input[name='Input.UserName']", "data": "user" },
         { "name": "Fill login pass", "type": "FillAsync", "selector": "input[name='Input.Password']", "data": "Abc123!" },
         { "name": "Submit login", "type": "ClickAsync", "data": "button[type='submit']" },
         { "name": "Assert logged", "type": "WaitForSelectorAsync", "data": "text=Logout" },
         { "name": "Open policies", "type": "GotoAsync", "data": "http://localhost:5228/policies" },
-        { "name": "Wait claim", "type": "WaitForSelectorAsync", "data": "text=Waterschade keuken" }
+        { "name": "Wait claim", "type": "WaitForSelectorAsync", "data": "text=Waterschade keuken" },
+        { "name": "Click add claim", "type": "ClickAsync", "data": "text=Add Claim" },
+        { "name": "Fill claim desc", "type": "FillAsync", "selector": "input[placeholder='Description']", "data": "Stormschade dak" },
+        { "name": "Fill claim date", "type": "FillAsync", "selector": "input[placeholder='Date']", "data": "2024-01-01" },
+        { "name": "Fill claim status", "type": "FillAsync", "selector": "input[placeholder='Status']", "data": "Open" },
+        { "name": "Save claim", "type": "ClickAsync", "data": "text=Save" },
+        { "name": "Wait new claim", "type": "WaitForSelectorAsync", "data": "text=Stormschade dak" }
         ]
     }
 ]

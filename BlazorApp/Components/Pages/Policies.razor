@@ -3,6 +3,8 @@
 @attribute [Authorize(Roles = "Client")]
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Collections.Generic
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext Db
@@ -56,6 +58,31 @@ else
                     </td>
                 </tr>
             }
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-sm btn-primary" @onclick="() => ToggleForm(p.Id)">Add Claim</button>
+                    @if (formPolicyId == p.Id)
+                    {
+                        <EditForm Model="newClaim" OnValidSubmit="() => AddClaim(p.Id)" class="mt-2">
+                            <div class="row g-2">
+                                <div class="col-md-5">
+                                    <InputText @bind-Value="newClaim.Description" class="form-control" placeholder="Description" />
+                                </div>
+                                <div class="col-md-3">
+                                    <InputDate @bind-Value="newClaim.IncidentDate" class="form-control"
+                                               AdditionalAttributes="@(new Dictionary<string, object> { ["placeholder"] = "Date" })" />
+                                </div>
+                                <div class="col-md-2">
+                                    <InputText @bind-Value="newClaim.Status" class="form-control" placeholder="Status" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                </td>
+            </tr>
         }
         </tbody>
     </table>
@@ -63,6 +90,8 @@ else
 
 @code {
     private List<Policy>? policies;
+    private int? formPolicyId;
+    private InsuranceClaim newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,5 +104,34 @@ else
                 .Include(p => p.Claims)
                 .ToListAsync();
         }
+    }
+
+    private void ToggleForm(int policyId)
+    {
+        if (formPolicyId == policyId)
+        {
+            formPolicyId = null;
+        }
+        else
+        {
+            formPolicyId = policyId;
+            newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
+        }
+    }
+
+    private async Task AddClaim(int policyId)
+    {
+        newClaim.PolicyId = policyId;
+        Db.InsuranceClaims.Add(newClaim);
+        await Db.SaveChangesAsync();
+
+        var policy = policies?.FirstOrDefault(p => p.Id == policyId);
+        if (policy != null)
+        {
+            policy.Claims.Add(newClaim);
+        }
+
+        formPolicyId = null;
+        newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
     }
 }
