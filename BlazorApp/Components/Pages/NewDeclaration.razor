@@ -1,0 +1,81 @@
+@page "/policies/{policyId:int}/declarations/new"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Client")]
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.Forms
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext Db
+@rendermode InteractiveServer
+
+<PageTitle>New Declaration</PageTitle>
+
+@if (policy == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>New declaration for policy @policy.PolicyNumber</h1>
+    <EditForm Model="newClaim" OnValidSubmit="AddClaim" class="mt-2">
+        <div class="row g-2">
+            <div class="col-md-5">
+                <InputText @bind-Value="newClaim.Description" class="form-control" placeholder="Description" />
+            </div>
+            <div class="col-md-3">
+<InputDate @bind-Value="newClaim.IncidentDate"
+           AdditionalAttributes="@(new Dictionary<string, object> {
+               ["placeholder"] = "Date",
+               ["class"] = "form-control",
+               ["min"] = policy.StartDate.ToString("yyyy-MM-dd"),
+               ["max"] = DateTime.Today.ToString("yyyy-MM-dd")
+           })" />
+            </div>
+            <div class="col-md-2">
+                <InputText @bind-Value="newClaim.Status" class="form-control" placeholder="Status" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success btn-sm">Save</button>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int policyId { get; set; }
+
+    private Policy? policy;
+    private InsuranceClaim newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+        if (user != null)
+        {
+            policy = await Db.Policies
+                .Where(p => p.Id == policyId && p.UserId == user.Id)
+                .FirstOrDefaultAsync();
+        }
+    }
+
+    private async Task AddClaim()
+    {
+        if (policy == null)
+        {
+            return;
+        }
+
+        if (newClaim.IncidentDate < policy.StartDate || newClaim.IncidentDate.Date > DateTime.Today)
+        {
+            return;
+        }
+
+        newClaim.PolicyId = policy.Id;
+        Db.InsuranceClaims.Add(newClaim);
+        await Db.SaveChangesAsync();
+
+        newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
+    }
+}
