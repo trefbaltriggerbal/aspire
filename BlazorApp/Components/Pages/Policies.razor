@@ -73,7 +73,9 @@ else
 <InputDate @bind-Value="newClaim.IncidentDate"
            AdditionalAttributes="@(new Dictionary<string, object> {
                ["placeholder"] = "Date",
-               ["class"] = "form-control"
+               ["class"] = "form-control",
+               ["min"] = p.StartDate.ToString("yyyy-MM-dd"),
+               ["max"] = DateTime.Today.ToString("yyyy-MM-dd")
            })" />
 
                                 </div>
@@ -126,6 +128,17 @@ else
 
     private async Task AddClaim(int policyId)
     {
+        var policy = policies?.FirstOrDefault(p => p.Id == policyId);
+        if (policy == null)
+        {
+            return;
+        }
+
+        if (newClaim.IncidentDate < policy.StartDate || newClaim.IncidentDate.Date > DateTime.Today)
+        {
+            return;
+        }
+
         newClaim.PolicyId = policyId;
         Db.InsuranceClaims.Add(newClaim);
         await Db.SaveChangesAsync();
