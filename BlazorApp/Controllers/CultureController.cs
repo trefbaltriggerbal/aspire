@@ -11,9 +11,12 @@ public class CultureController : Controller
     {
         if (!string.IsNullOrEmpty(culture))
         {
+            var cookieValue = CookieRequestCultureProvider.MakeCookieValue(
+                new RequestCulture(culture, culture));
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture, culture)));
+                cookieValue,
+                new CookieOptions { Path = "/", Expires = DateTimeOffset.UtcNow.AddYears(1) });
         }
 
         return LocalRedirect(redirectUri);
