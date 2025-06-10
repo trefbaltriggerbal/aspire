@@ -5,6 +5,9 @@ using BlazorApp.Components;
 using BlazorApp.Components.Account;
 using BlazorApp.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace BlazorApp;
 
@@ -58,6 +61,16 @@ public class Program
             .AddDefaultTokenProviders();
 
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+        builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+        builder.Services.AddControllers();
+
+        var supportedCultures = new[] { "en", "fr", "nl" };
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.DefaultRequestCulture = new RequestCulture("en");
+            options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+            options.SupportedUICultures = options.SupportedCultures;
+        });
 
         var app = builder.Build();
 
@@ -159,6 +172,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
+        var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+        app.UseRequestLocalization(localizationOptions);
         app.UseAntiforgery();
 
         app.MapRazorComponents<App>()
@@ -166,6 +181,7 @@ public class Program
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
+        app.MapControllers();
 
         app.Run();
     }

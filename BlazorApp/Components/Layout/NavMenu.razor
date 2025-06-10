@@ -1,10 +1,11 @@
-﻿@implements IDisposable
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> L
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorApp</a>
+        <a class="navbar-brand" href="">@L["AppTitle"]</a>
     </div>
 </div>
 
@@ -14,20 +15,20 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @L["Home"]
             </NavLink>
         </div>
 
-<!--
+        <!--
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> @L["Counter"]
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @L["Weather"]
             </NavLink>
         </div>
 
@@ -36,13 +37,13 @@
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
             </NavLink>
         </div>
--->
+        -->
 
         <AuthorizeView Roles="Client,Administrator">
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="policies">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Policies
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @L["Policies"]
                     </NavLink>
                 </div>
             </Authorized>
@@ -52,7 +53,7 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Profile
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @L["Profile"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
@@ -60,7 +61,7 @@
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                         <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> @L["Logout"]
                         </button>
                     </form>
                 </div>
@@ -68,12 +69,12 @@
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> @L["Register"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> @L["Login"]
                     </NavLink>
                 </div>
             </NotAuthorized>
@@ -101,4 +102,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-

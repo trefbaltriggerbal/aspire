@@ -1,4 +1,4 @@
-﻿@page "/policies"
+@page "/policies"
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Client")]
 @using Microsoft.AspNetCore.Identity
@@ -8,25 +8,26 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext Db
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Policies> L
 @rendermode InteractiveServer
 
-<PageTitle>Policies</PageTitle>
+<PageTitle>@L["PageTitle"]</PageTitle>
 
-<h1>Policies</h1>
+<h1>@L["Heading"]</h1>
 
 @if (policies == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@L["Loading"]</em></p>
 }
 else if (policies.Count == 0)
 {
-    <p>No policies found.</p>
+    <p>@L["None"]</p>
 }
 else
 {
     <table class="table">
         <thead>
-            <tr><th>Number</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th></tr>
+            <tr><th>@L["Number"]</th><th>@L["Description"]</th><th>@L["Start"]</th><th>@L["End"]</th><th>@L["Actions"]</th></tr>
         </thead>
         <tbody>
 @foreach (var p in policies)
@@ -37,9 +38,9 @@ else
                 <td>@p.StartDate.ToShortDateString()</td>
                 <td>@p.EndDate.ToShortDateString()</td>
                 <td>
-                    <a class="btn btn-sm btn-info me-1" href="/policies/@p.Id">Meer info over polis</a>
-                    <a class="btn btn-sm btn-secondary me-1" href="/policies/@p.Id/declarations">Aangiftes bekijken</a>
-                    <a class="btn btn-sm btn-primary" href="/policies/@p.Id/declarations/new">Aangifte maken</a>
+                    <a class="btn btn-sm btn-info me-1" href="/policies/@p.Id">@L["Details"]</a>
+                    <a class="btn btn-sm btn-secondary me-1" href="/policies/@p.Id/declarations">@L["ViewDeclarations"]</a>
+                    <a class="btn btn-sm btn-primary" href="/policies/@p.Id/declarations/new">@L["CreateDeclaration"]</a>
                 </td>
             </tr>
         }
