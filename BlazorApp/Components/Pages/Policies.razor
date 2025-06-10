@@ -26,7 +26,7 @@ else
 {
     <table class="table">
         <thead>
-            <tr><th>Number</th><th>Description</th><th>Start</th><th>End</th></tr>
+            <tr><th>Number</th><th>Description</th><th>Start</th><th>End</th><th>Actions</th></tr>
         </thead>
         <tbody>
 @foreach (var p in policies)
@@ -36,58 +36,10 @@ else
                 <td>@p.Description</td>
                 <td>@p.StartDate.ToShortDateString()</td>
                 <td>@p.EndDate.ToShortDateString()</td>
-            </tr>
-            @if (p.Claims?.Count > 0)
-            {
-                <tr>
-                    <td colspan="4">
-                        <table class="table table-sm ms-3">
-                            <thead>
-                                <tr><th>Description</th><th>Date</th><th>Status</th></tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var c in p.Claims)
-                            {
-                                <tr>
-                                    <td>@c.Description</td>
-                                    <td>@c.IncidentDate.ToShortDateString()</td>
-                                    <td>@c.Status</td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            }
-            <tr>
-                <td colspan="4">
-                    <button class="btn btn-sm btn-primary" @onclick="() => ToggleForm(p.Id)">Add Claim</button>
-                    @if (formPolicyId == p.Id)
-                    {
-                        <EditForm Model="newClaim" OnValidSubmit="() => AddClaim(p.Id)" class="mt-2">
-                            <div class="row g-2">
-                                <div class="col-md-5">
-                                    <InputText @bind-Value="newClaim.Description" class="form-control" placeholder="Description" />
-                                </div>
-                                <div class="col-md-3">
-<InputDate @bind-Value="newClaim.IncidentDate"
-           AdditionalAttributes="@(new Dictionary<string, object> {
-               ["placeholder"] = "Date",
-               ["class"] = "form-control",
-               ["min"] = p.StartDate.ToString("yyyy-MM-dd"),
-               ["max"] = DateTime.Today.ToString("yyyy-MM-dd")
-           })" />
-
-                                </div>
-                                <div class="col-md-2">
-                                    <InputText @bind-Value="newClaim.Status" class="form-control" placeholder="Status" />
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="submit" class="btn btn-success btn-sm">Save</button>
-                                </div>
-                            </div>
-                        </EditForm>
-                    }
+                <td>
+                    <a class="btn btn-sm btn-info me-1" href="/policies/@p.Id">Meer info over polis</a>
+                    <a class="btn btn-sm btn-secondary me-1" href="/policies/@p.Id/declarations">Aangiftes bekijken</a>
+                    <a class="btn btn-sm btn-primary" href="/policies/@p.Id/declarations/new">Aangifte maken</a>
                 </td>
             </tr>
         }
@@ -97,8 +49,6 @@ else
 
 @code {
     private List<Policy>? policies;
-    private int? formPolicyId;
-    private InsuranceClaim newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,42 +58,7 @@ else
         {
             policies = await Db.Policies
                 .Where(p => p.UserId == user.Id)
-                .Include(p => p.Claims)
                 .ToListAsync();
         }
-    }
-
-    private void ToggleForm(int policyId)
-    {
-        if (formPolicyId == policyId)
-        {
-            formPolicyId = null;
-        }
-        else
-        {
-            formPolicyId = policyId;
-            newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
-        }
-    }
-
-    private async Task AddClaim(int policyId)
-    {
-        var policy = policies?.FirstOrDefault(p => p.Id == policyId);
-        if (policy == null)
-        {
-            return;
-        }
-
-        if (newClaim.IncidentDate < policy.StartDate || newClaim.IncidentDate.Date > DateTime.Today)
-        {
-            return;
-        }
-
-        newClaim.PolicyId = policyId;
-        Db.InsuranceClaims.Add(newClaim);
-        await Db.SaveChangesAsync();
-
-        formPolicyId = null;
-        newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
     }
 }

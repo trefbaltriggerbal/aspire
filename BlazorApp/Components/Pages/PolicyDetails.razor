@@ -1,0 +1,41 @@
+@page "/policies/{policyId:int}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Client")]
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext Db
+@rendermode InteractiveServer
+
+<PageTitle>Policy Details</PageTitle>
+
+@if (policy == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>Policy @policy.PolicyNumber</h1>
+    <p>@policy.Description</p>
+    <p>Start: @policy.StartDate.ToShortDateString()</p>
+    <p>End: @policy.EndDate.ToShortDateString()</p>
+}
+
+@code {
+    [Parameter] public int policyId { get; set; }
+
+    private Policy? policy;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+        if (user != null)
+        {
+            policy = await Db.Policies
+                .Where(p => p.Id == policyId && p.UserId == user.Id)
+                .FirstOrDefaultAsync();
+        }
+    }
+}

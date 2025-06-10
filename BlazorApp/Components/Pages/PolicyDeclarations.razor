@@ -1,0 +1,58 @@
+@page "/policies/{policyId:int}/declarations"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Client")]
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext Db
+@rendermode InteractiveServer
+
+<PageTitle>Declarations</PageTitle>
+
+@if (policy == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (policy.Claims.Count == 0)
+{
+    <p>No declarations found.</p>
+}
+else
+{
+    <h1>Declarations for policy @policy.PolicyNumber</h1>
+    <table class="table">
+        <thead>
+            <tr><th>Description</th><th>Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var c in policy.Claims)
+        {
+            <tr>
+                <td>@c.Description</td>
+                <td>@c.IncidentDate.ToShortDateString()</td>
+                <td>@c.Status</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter] public int policyId { get; set; }
+
+    private Policy? policy;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+        if (user != null)
+        {
+            policy = await Db.Policies
+                .Include(p => p.Claims)
+                .Where(p => p.Id == policyId && p.UserId == user.Id)
+                .FirstOrDefaultAsync();
+        }
+    }
+}
