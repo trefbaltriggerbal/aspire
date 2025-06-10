@@ -1,4 +1,4 @@
-@page "/policies"
+﻿@page "/policies"
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Client")]
 @using Microsoft.AspNetCore.Identity
@@ -8,6 +8,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext Db
+@rendermode InteractiveServer
 
 <PageTitle>Policies</PageTitle>
 
@@ -69,8 +70,12 @@ else
                                     <InputText @bind-Value="newClaim.Description" class="form-control" placeholder="Description" />
                                 </div>
                                 <div class="col-md-3">
-                                    <InputDate @bind-Value="newClaim.IncidentDate" class="form-control"
-                                               AdditionalAttributes="@(new Dictionary<string, object> { ["placeholder"] = "Date" })" />
+<InputDate @bind-Value="newClaim.IncidentDate"
+           AdditionalAttributes="@(new Dictionary<string, object> {
+               ["placeholder"] = "Date",
+               ["class"] = "form-control"
+           })" />
+
                                 </div>
                                 <div class="col-md-2">
                                     <InputText @bind-Value="newClaim.Status" class="form-control" placeholder="Status" />
@@ -124,12 +129,6 @@ else
         newClaim.PolicyId = policyId;
         Db.InsuranceClaims.Add(newClaim);
         await Db.SaveChangesAsync();
-
-        var policy = policies?.FirstOrDefault(p => p.Id == policyId);
-        if (policy != null)
-        {
-            policy.Claims.Add(newClaim);
-        }
 
         formPolicyId = null;
         newClaim = new() { IncidentDate = DateTime.Today, Status = "Open" };
