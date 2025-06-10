@@ -1,6 +1,6 @@
 @page "/policies"
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Client,Administrator")]
+@attribute [Authorize(Roles = "Client")]
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject UserManager<ApplicationUser> UserManager
@@ -34,6 +34,28 @@ else
                 <td>@p.StartDate.ToShortDateString()</td>
                 <td>@p.EndDate.ToShortDateString()</td>
             </tr>
+            @if (p.Claims?.Count > 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        <table class="table table-sm ms-3">
+                            <thead>
+                                <tr><th>Description</th><th>Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var c in p.Claims)
+                            {
+                                <tr>
+                                    <td>@c.Description</td>
+                                    <td>@c.IncidentDate.ToShortDateString()</td>
+                                    <td>@c.Status</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
         }
         </tbody>
     </table>
@@ -48,7 +70,10 @@ else
         var user = await UserManager.GetUserAsync(authState.User);
         if (user != null)
         {
-            policies = await Db.Policies.Where(p => p.UserId == user.Id).ToListAsync();
+            policies = await Db.Policies
+                .Where(p => p.UserId == user.Id)
+                .Include(p => p.Claims)
+                .ToListAsync();
         }
     }
 }

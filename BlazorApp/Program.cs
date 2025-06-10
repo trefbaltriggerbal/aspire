@@ -114,6 +114,28 @@ public class Program
                 db.SaveChanges();        // sync variant
             }
 
+            var policy = db.Policies.First(p => p.PolicyNumber == "POL123" && p.UserId == user.Id);
+            if (!db.InsuranceClaims.Any(c => c.PolicyId == policy.Id))
+            {
+                db.InsuranceClaims.AddRange([
+                    new InsuranceClaim
+                    {
+                        PolicyId = policy.Id,
+                        Description = "Waterschade keuken",
+                        IncidentDate = DateTime.UtcNow.AddDays(-10),
+                        Status = "Open"
+                    },
+                    new InsuranceClaim
+                    {
+                        PolicyId = policy.Id,
+                        Description = "Diefstal fiets",
+                        IncidentDate = DateTime.UtcNow.AddDays(-30),
+                        Status = "Closed"
+                    }
+                ]);
+                db.SaveChanges();
+            }
+
         }
 
         app.MapDefaultEndpoints();

@@ -19,4 +19,6 @@ public class Policy
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
+
+    public List<InsuranceClaim> Claims { get; set; } = new();
 }

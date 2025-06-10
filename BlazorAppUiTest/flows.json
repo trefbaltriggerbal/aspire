@@ -15,7 +15,9 @@
         { "name": "Fill login username", "type": "FillAsync", "selector": "input[name='Input.UserName']", "data": "user" },
         { "name": "Fill login pass", "type": "FillAsync", "selector": "input[name='Input.Password']", "data": "Abc123!" },
         { "name": "Submit login", "type": "ClickAsync", "data": "button[type='submit']" },
-        { "name": "Assert logged", "type": "WaitForSelectorAsync", "data": "text=Logout" }
+        { "name": "Assert logged", "type": "WaitForSelectorAsync", "data": "text=Logout" },
+        { "name": "Open policies", "type": "GotoAsync", "data": "http://localhost:5228/policies" },
+        { "name": "Wait claim", "type": "WaitForSelectorAsync", "data": "text=Waterschade keuken" }
         ]
     }
 ]
