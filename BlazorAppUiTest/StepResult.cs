@@ -1,4 +1,4 @@
-﻿internal sealed record StepResult(
+﻿public sealed record StepResult(
     string FlowName,
     string Label,
     bool Success,

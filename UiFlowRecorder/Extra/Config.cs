@@ -1,4 +1,7 @@
-﻿namespace UiFlowRecorder;
+﻿using System;
+using System.Net.Http;
+
+namespace UiFlowRecorder;
 
 // Re-added support classes
 

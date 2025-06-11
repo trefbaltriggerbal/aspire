@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace UiFlowRecorder;
 
-internal sealed class Uploader
+public sealed class Uploader
 {
     public Dictionary<string, string> HashToUrl { get; } = PersistLayer.LoadMapping();
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UiFlowRecorder;
 
-internal static class Program
+public static class Program
 {
     public static async Task Main(string[] args)
     {
@@ -166,7 +166,7 @@ internal static class Program
 }
 
 /* ───────────────────────────────────────── Models ───────────────────────────────────────── */
-internal sealed record StepResult(
+public sealed record StepResult(
     string FlowName,
     string Label,
     bool Success,

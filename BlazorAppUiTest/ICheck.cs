@@ -1,11 +1,11 @@
 ﻿using Microsoft.Playwright;
 
-internal interface ICheck
+public interface ICheck
 {
     string Name { get; }
     Task ExecuteAsync(IPage page);
 }
-internal sealed class AssertUrlIsCheck : ICheck
+public sealed class AssertUrlIsCheck : ICheck
 {
     public string Name { get; }
     private readonly string _expected;
@@ -33,7 +33,7 @@ internal sealed class AssertUrlIsCheck : ICheck
     }
 
 
-    internal sealed class AssertTextNotEqualsCheck : ICheck
+    public sealed class AssertTextNotEqualsCheck : ICheck
     {
         public string Name { get; }
         private readonly string _selector;

@@ -1,6 +1,9 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
-namespace UiFlowRecorder;
+namespace UiFlowRecorder.Extra;
 
 public static class PersistLayer
 {

@@ -8,7 +8,7 @@ namespace UiFlowRecorder;
 /// <summary>
 /// Leest een JSON-bestand en bouwt Playwright-flows, mét ondersteuning voor asserts.
 /// </summary>
-internal static class FlowStepBuilder
+public static class FlowStepBuilder
 {
     public static List<FlowDefinition> FromJsonFile(string path)
     {
@@ -152,7 +152,7 @@ Call log:
     };
 }
 
-internal class JsonFlow
+public class JsonFlow
 {
     public string Name { get; set; } = string.Empty;
     public List<JsonFlowStep> Steps { get; set; } = new();
@@ -161,7 +161,7 @@ internal class JsonFlow
 /// <summary>
 /// Eén stap uit de JSON.  Voor asserts zijn 'Selector' en/of 'Expected' optioneel nodig.
 /// </summary>
-internal class JsonFlowStep
+public class JsonFlowStep
 {
     public string Name { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;   // bv. ClickAsync, AssertUrlIs …
@@ -171,12 +171,12 @@ internal class JsonFlowStep
 }
 
 /// <summary> Eén stap met UI-actie + zero-of-meer checks. </summary>
-internal sealed record FlowStep(
+public sealed record FlowStep(
     string Name,
     Func<IPage, Task> Action,
     List<ICheck> Checks);
 
 /// <summary> Een volledige flow. </summary>
-internal sealed record FlowDefinition(
+public sealed record FlowDefinition(
     string Name,
     FlowStep[] Steps);
